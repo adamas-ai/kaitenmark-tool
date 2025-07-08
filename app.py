@@ -16,7 +16,7 @@ dainumber = st.text_input("🔢 台番号")
 
 spins = st.number_input("🔁 総回転数（数字のみ）", min_value=1, step=1)
 border = st.number_input("📏 ボーダー（例: 18.7）", value=18.7, step=0.1)
-kankin = st.number_input("💰 換金率（例: 28 = 28玉交換）", value=28, step=0.1)
+kankin = st.number_input("💰 換金率（例: 28 = 28玉交換）", value=28.0, step=0.1)
 
 # --- 内部計算 ---
 if spins and border and kankin:
