@@ -35,7 +35,7 @@ if uploaded_image is not None:
     canvas_result = st_canvas(
     fill_color="rgba(255, 0, 0, 0.3)",
     stroke_width=3,
-    background_image=image,  # PIL.Image オブジェクトを渡す
+    background_image=image,  # PIL.Imageで読み込んだもの
     update_streamlit=True,
     height=height,
     width=width,
