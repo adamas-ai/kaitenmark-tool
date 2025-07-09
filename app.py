@@ -61,7 +61,7 @@ if uploaded_image is not None:
     height=height,
     width=width,
     drawing_mode=drawing_mode_map[drawing_option],
-    key="canvas",
+    key=f"canvas_{drawing_option}"
 )
 
     if canvas_result.json_data is not None:
