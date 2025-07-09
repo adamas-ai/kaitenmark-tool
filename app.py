@@ -49,21 +49,20 @@ if uploaded_image is not None:
         "移動（パン）": "pan"
     }
     line_colors = {
-        "0ライン": "rgba(0, 0, 255, 0.7)",    # 青
-        "終点ライン": "rgba(255, 0, 0, 0.7)"  # 赤
-    }
+    "0ライン": "#0000ff",   # 青
+    "終点ライン": "#ff0000"  # 赤
+}
 
     canvas_result = st_canvas(
-        fill_color=line_colors.get(drawing_option, "rgba(0,0,0,0)"),
-        stroke_width=3,
-        background_image=None,
-        background_image_url=background_url,
-        update_streamlit=True,
-        height=height,
-        width=width,
-        drawing_mode=drawing_mode_map[drawing_option],
-        key="canvas",
-    )
+    fill_color=line_colors.get(drawing_option, "#00000000"),  # 透明な色にしたい場合 "#00000000"
+    stroke_width=3,
+    background_image=image,
+    update_streamlit=True,
+    height=height,
+    width=width,
+    drawing_mode=drawing_mode_map[drawing_option],
+    key="canvas",
+)
 
     if canvas_result.json_data is not None:
         objs = canvas_result.json_data["objects"]
