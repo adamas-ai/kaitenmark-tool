@@ -41,7 +41,7 @@ if uploaded_image:
         update_streamlit=True,
         height=height,
         width=width,
-        drawing_mode="freedraw",
+        drawing_mode="line",
         key="canvas",
     )
 
