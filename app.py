@@ -70,10 +70,9 @@ canvas_result = st_canvas(
     key="canvas"
 )
 
-    if canvas_result.json_data is not None:
-        objs = canvas_result.json_data["objects"]
-        lines = [obj for obj in objs if obj["type"] == "line"]
-
+if canvas_result.json_data is not None:  # ←インデントなしでOK
+    objs = canvas_result.json_data["objects"]
+    lines = [obj for obj in objs if obj["type"] == "line"]
         results = []
         for i, line in enumerate(lines):
             y0 = line["y1"]
