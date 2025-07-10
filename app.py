@@ -38,21 +38,30 @@ if uploaded_image is not None:
     )
 
     if canvas_result.json_data is not None:
-        lines = [obj for obj in canvas_result.json_data["objects"] if obj["type"] == "line"]
+    objs = canvas_result.json_data["objects"]
+    lines = [obj for obj in objs if obj["type"] == "line"]
 
-        results = []
-        for i in range(0, len(lines) - 1, 2):
-            y0 = lines[i]["y1"]
-            y1 = lines[i + 1]["y1"]
-            dy = abs(y1 - y0)
-            estimated_balls = int(dy * bullets_per_pixel)
-            results.append({
-                "ペア": f"{(i // 2) + 1}",
-                "差(px)": round(dy, 1),
-                "推定打ち込み玉数": estimated_balls
-            })
+    results = []
 
-        if results:
-            df = pd.DataFrame(results)
-            st.dataframe(df)
-            st.text_area("📤 LINEに貼り付ける用", value=df.to_string(index=False), height=200)
+    # 必ず偶数本（0ライン → 終点ラインの順でペア）であることを想定
+    for i in range(0, len(lines) - 1, 2):
+        line0 = lines[i]       # 0ライン
+        line1 = lines[i + 1]   # 終点ライン
+
+        # 中心Y座標を取得
+        y0_center = (line0["y1"] + line0["y2"]) / 2
+        y1_center = (line1["y1"] + line1["y2"]) / 2
+
+        dy = abs(y1_center - y0_center)
+        estimated_balls = int(dy * bullets_per_pixel)
+
+        results.append({
+            "ペア": f"{i+1} & {i+2}",
+            "差(px)": round(dy, 1),
+            "推定打ち込み玉数": estimated_balls
+        })
+
+    if results:
+        df = pd.DataFrame(results)
+        st.dataframe(df)
+        st.text_area("📤 LINEに貼り付ける用メッセージ", value=df.to_string(index=False), height=200)
