@@ -21,14 +21,13 @@ if uploaded_image is not None:
     mm_per_pixel = pixel_distance / pixel_length
     bullets_per_pixel = 1000 * mm_per_pixel
 
-    # 描画モード切替
-    mode = st.radio("モード", ["ラインを描く", "ラインを編集する"])
-
+    # 描画 or 編集モードの切り替え
+    mode = st.radio("操作モードを選択", ("ラインを描く", "ラインを移動・編集"))
     drawing_mode = "line" if mode == "ラインを描く" else "transform"
 
     canvas_result = st_canvas(
-        fill_color="rgba(0, 0, 0, 0)",
-        stroke_color="rgba(0, 0, 255, 1)",
+        fill_color="rgba(0, 0, 255, 0.5)",
+        stroke_color="rgba(0, 0, 255, 0.7)",
         stroke_width=3,
         background_image=image,
         update_streamlit=True,
@@ -39,27 +38,19 @@ if uploaded_image is not None:
     )
 
     if canvas_result.json_data is not None:
-        objects = canvas_result.json_data["objects"]
-        lines = [obj for obj in objects if obj["type"] == "line"]
+        lines = [obj for obj in canvas_result.json_data["objects"] if obj["type"] == "line"]
 
         results = []
-        for i in range(0, len(lines), 2):
-            try:
-                line0 = lines[i]
-                line1 = lines[i + 1]
-                y_start = line0["y1"]
-                y_end = line1["y1"]
-                dy = abs(y_end - y_start)
-                estimated_balls = int(dy * bullets_per_pixel)
-
-                results.append({
-                    "ペア": f"{i+1}-{i+2}",
-                    "差(px)": round(dy, 1),
-                    "推定打ち込み玉数": estimated_balls
-                })
-            except IndexError:
-                # 奇数本だけ描かれてる場合は無視
-                continue
+        for i in range(0, len(lines) - 1, 2):
+            y0 = lines[i]["y1"]
+            y1 = lines[i + 1]["y1"]
+            dy = abs(y1 - y0)
+            estimated_balls = int(dy * bullets_per_pixel)
+            results.append({
+                "ペア": f"{(i // 2) + 1}",
+                "差(px)": round(dy, 1),
+                "推定打ち込み玉数": estimated_balls
+            })
 
         if results:
             df = pd.DataFrame(results)
