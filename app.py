@@ -58,16 +58,15 @@ if uploaded_image is not None:
     fill_color = line_colors.get(drawing_option, "rgba(0,0,0,0)") if drawing_option != "移動（パン）" else "rgba(0,0,0,0)"
 
     canvas_result = st_canvas(
-        fill_color=fill_color,
-        stroke_width=stroke_width,
-        background_image=None,
-        background_image_url=background_url,
-        update_streamlit=True,
-        height=height,
-        width=width,
-        drawing_mode=drawing_mode_map[drawing_option],
-        key="canvas"
-    )
+    fill_color=fill_color,
+    stroke_width=stroke_width,
+    background_image=image,  # ← PIL Image を直接指定
+    update_streamlit=True,
+    height=height,
+    width=width,
+    drawing_mode=drawing_mode_map[drawing_option],
+    key="canvas"
+)
 
     if canvas_result.json_data is not None:
         objs = canvas_result.json_data["objects"]
